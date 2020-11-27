@@ -1,0 +1,23 @@
+version: "3"
+services:
+  api:
+    build: 
+      context: "./manager"
+      dockerfile: "Dockerfile.dev"
+    image: "manager:latest"
+    image: alpine
+    stdin_open: true
+    tty: true
+    command: "sh"
+    volumes:
+      - "./manager:/app"
+    env_file:
+      - ".postgres_db_con"
+    environment:
+      CSV_FILE: "data.csv"
+    depends_on:
+      - "db"
+  db:
+    image: "postgres:latest"
+    env_file:
+      - ".postgres_db_con"

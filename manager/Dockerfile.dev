@@ -1,0 +1,13 @@
+FROM python:latest
+
+# the postgres python client library
+RUN pip install psycopg2-binary
+
+WORKDIR /app/
+
+# copy contents of manager in app folder
+COPY . .
+
+# run the package as a script
+# i.e. run the __main__.py
+CMD ["python", "-m", "app"]
