@@ -24,7 +24,7 @@ def create_new_table(connection):
                     id SERIAL, 
                     first_name VARCHAR(50),
                     last_name VARCHAR(50),
-                    date_of_birth VARCHAR(20),
+                    date_of_birth DATE,
                     email VARCHAR(100),
                     PRIMARY KEY (id)
                     ) """
@@ -36,35 +36,45 @@ def create_new_table(connection):
     except DuplicateTable as e:
         print("The table already exist, skipping.\n")
         connection.rollback()
-    except (Exception, DatabaseError) as error:
-        print(error)
+    except (Exception, DatabaseError) as e:
+        print(e)
         connection.rollback()
-        if connection is not None:
-            connection.close()
-        
-
-
-def insert_rows_to_table(connection, table, rows):
-    """ rows should be of the form of a list of tuples"""
-    query = """ INSERT INTO persons(id, first_name, last_name, date_of_birth, email) VALUES (%s)"""
-    cursor = connection.cursor()
-    # insert multiple rows at once
-    cursor.executemany(query, rows)
-    # commit
-    connection.commit()
-    print(f"Added rows successfully:\n{row}\n")
 
 def csv_to_table(connection, table, data_path):
+    """ Load csv file to postgres table when formats match """
     try:
         cursor = connection.cursor()
         with open(data_path) as f:
-            cursor.copy_from(f, table, sep=",", columns=('first_name', 'last_name', 'date_of_birth', 'email'))
+            cursor.copy_from(f, table, sep=",", 
+                columns=('first_name', 'last_name', 'date_of_birth', 'email'))
         connection.commit()
         print("Added the CSV successfully !")
     except (Exception, DatabaseError) as error:
         print(error)
         connection.rollback()
-        if connection is not None:
-            connection.close()
+
+def table_to_csv(connection, table, output_file):
+    """ Retrieve data from the Postgres table and store it in CSV """
+    import csv
+    try:
+        cursor = connection.cursor()
+        query = """ SELECT * FROM persons ;"""
+        cursor.execute(query)
+        records_without_id = []
+        for id_, *rest in cursor.fetchall():
+            records_without_id.append(rest) 
+        with open(output_file, 'w') as f:
+            writer = csv.writer(f, delimiter=',', lineterminator='\n')
+            writer.writerows(records_without_id)
+    except (Exception, DatabaseError) as error:
+        print(error)
+
+def csv_to_tuples(file_path):
+    """ Read csv file and return list of tuples """
+    import csv
+    with open(file_path) as f:
+        data=[tuple(line) for line in csv.reader(f)]
+    return data
+
 
 # what's the difference between a server side cursor and client side cursor (apprently you can't use a server side cursor to create a table): https://stackoverflow.com/questions/51804513/psycopg2-syntax-error-at-or-near-update

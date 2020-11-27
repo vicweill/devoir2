@@ -1,8 +1,7 @@
 from .utils_postgres import (create_new_table, 
-							 connect_to_db_server, 
-							 insert_rows_to_table,
-							 csv_to_table)
-from .utils import csv_to_tuples
+							 connect_to_db_server,
+							 csv_to_table,
+							 table_to_csv)
 
 import os
 

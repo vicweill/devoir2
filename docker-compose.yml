@@ -5,12 +5,11 @@ services:
       context: "./manager"
       dockerfile: "Dockerfile.dev"
     image: "manager:latest"
-    image: alpine
-    stdin_open: true
-    tty: true
-    command: "sh"
-    volumes:
-      - "./manager:/app"
+    #image: alpine
+    #stdin_open: true
+    #tty: true
+    #volumes:
+    #  - "./manager:/app"
     env_file:
       - ".postgres_db_con"
     environment:
@@ -21,3 +20,9 @@ services:
     image: "postgres:latest"
     env_file:
       - ".postgres_db_con"
+  adminer:
+    image: "adminer"
+    ports:
+      - "8098:8080"
+    depends_on:
+      - "db"

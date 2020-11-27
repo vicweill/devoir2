@@ -1,23 +1,21 @@
-from . import create_new_table, connect_to_db_server,insert_rows_to_table, csv_to_tuples, csv_to_table
-from . import path_data
+from . import *
 
 try:
+	con = None
 	# open connection to db
 	con = connect_to_db_server()
 	# create a new table "person"
 	create_new_table(con)
-	# convert dataset to list of rows
-	#data = csv_to_tuples(path_data)
-	# populate table
+	# populate table from csv file
 	csv_to_table(con, "persons", path_data)
-	# close connection
-	con.close()
+	# read table again
+	table_to_csv(con, "persons", "./fetched_data.csv")
 except Exception as e:
-        print(f"An error occured:\n {e}")
+	print(f"An error occured:\n {e}")
 finally:
+	# close connection if exists
     if con is not None:
         con.close()	
-	
 
 """
 runs tkinter/__main__.py, which has this line:
