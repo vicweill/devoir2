@@ -20,9 +20,3 @@ services:
     image: "postgres:latest"
     env_file:
       - ".postgres_db_con"
-  adminer:
-    image: "adminer"
-    ports:
-      - "8098:8080"
-    depends_on:
-      - "db"

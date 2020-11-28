@@ -1,6 +1,12 @@
 # Last session project.
 ## Duration: 3h
 
+# Brief description
+
+The python code you see within the manager folder has been designed to connect to a Postgres server, attempt to load a CSV data into a table named 'persons' within a database named 'world'.
+
+The app isn't containerized yet, we want you to create a Dockerfile to bundle your app along with its dependencies and a docker-compose file to orchestrate this app along with a postgres server using the official Postgres docker image.
+
 ## In English (French below)
 
 ### Must Do !
@@ -8,18 +14,30 @@
 - You **MUST** define the **docker-compose.yml** file where it is usually defined, that is, the **project root**.
 - The Python code **MUST NOT** be modified, **NOR** moved under **NO** circumstances, **only 1 Dockerfile and 1 docker-compose file should be created**
 - You will need, using the docker-compose file, to **tag** the image built from the dockerfile with the exact name: **manager:latest**.
+- The **service** in the **docker-compose** file, for the application **MUST** be named **manager** 
 
 Anything that does not respect the aforementioned conditions will result in an automatic score of 0 for this exam. This is CRUCIAL so that I can perform the tests on your project.
 
+RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /
+RUN chmod +x /wait-for-it.sh
 ### Tips
+* to run a package: **python -m app**
 * the **dockerfile filename and extension** is left free, however remember to adapt the docker-compose file if the name were to be different from the conventions (eg: Dockerfile.dev).
-* Proceed step-by-step ! We do the dockerfile first, make sure it builds, then we can orchestrate everything with the docker-compose file.
-* for the dockerfile: check if the project requires one or more **libraries**, from the **import** statements in the application logic.
 * it is **strongly advised to take a recent version of python image** (> 3.5) and **not** lightweight versions (such as the slim tag therefore), the latest and 3.8.4 tags are operational.
-* wait for it: https://github.com/vishnubob/wait-for-it
 * **environment variables** must be defined in order to **connect to the Postgres server** (user to authenticate, user password, database)
 * For the **port and the name of the host to connect to the database**, you can directly find it in the code in the very first functions! **You will have to cleverly use the automatic service discovery feature provided by the docker-compose file** (if you had forgotten already, here [it is](https://docs.docker.com/compose/networking/)...! Again, you **can't** change the **code nor structure** so to be convenient for you.
 So look at both how the official Postgres Docker image defines these variable names, and how the code/application logic uses them.
+* Don't hesitate to run multiple times **docker-compose up --build** and check how is your app going on, and then go backwards, modify things that wrent wrong, etc...
+* Proceed step-by-step ! We do the dockerfile first, make sure it builds, then we can orchestrate everything with the docker-compose file.
+* for the dockerfile: check if the project requires one or more **libraries**, from the **import** statements in the application logic.
+* the python code should wait for the database server to be ready before connecting to it, otherwise, this will result in an error message. Hence you should account for it by writing those 3 lines in your dockerfile:
+
+```
+	RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /
+	RUN chmod +x /wait-for-it.sh
+	ENTRYPOINT ["/wait-for-it.sh", "db:5432", "--"]
+```
+For the curious persons, more explanations [here](https://github.com/vishnubob/wait-for-it)
 
 
 ## French
@@ -29,19 +47,30 @@ So look at both how the official Postgres Docker image defines these variable na
 - Vous **DEVEZ** définir le **docker-compose.yml** file là où on le définit usuellement: la **racine du projet**.
 - Le code Python **NE** doit être modifié, **NI** déplacé en AUCUN cas, **seuls 1 Dockerfile et 1 docker-compose file comptent.**
 - Vous devrez, en utilisant le docker-compose file, **tagguer** l'image built à partir du dockerfile avec pour nom exact: **manager:latest**.
+- Le **service** dans le **docker-compose** file, pour l'application **DOIT** s'appeler **manager**.
 
 Vous devez respecter toutes les conditions ci-dessus, tout non respect entraînera une note de 0. Ceci est crucial pour que je puisse effectuer les tests sur votre projet.
 
 ### Astuces
-
+* pour runner un package: **python -m app**
 * le nom de fichier du dockerfile est laissé libre, pensez bien cependant à adapter le docker-compose file si le nom venait à être différent des conventions (ex: Dockerfile.dev).
-* faites par étape ! on fait le dockerfile d'abord, on s'assure que ça build, puis on peut alors orchestrer l'ensemble avec le docker-compose file.
-* pour le dockerfile: regardez bien si le projet nécessite une librairie, du côté des **import** statements donc.
 * il est vivement **conseillé de prendre une version récente d'image python** (>3.5) et **pas** allégée (pas le tag slim donc), exemple: les tag latest et 3.8.4 sont opérationels.
-* wait for it : https://github.com/vishnubob/wait-for-it
 * des **variables d'environnement** devront être définies pour pouvoir **se connecter au serveur Postgres** (user à authentifier, mot de passe du user, database)
+* idem pour spécifier où se trouve le fichier de donnée.
 * quand au **port et le nom du host**, vous pouvez directement le trouver dans le code dans les toutes premières fonctions ! **Il faudra astucieusement utiliser la fonctionnalité d'automatic service discovery apportée par le docker-compose file** (si vous aviez oublié... https://docs.docker.com/compose/networking/) ! Encore une fois, vous ne pouvez **PAS** modifier le code ni la structure pour vous "arranger".
 Pensez donc à regarder à la fois comment **l'image Docker officielle de Postgres** definit ces noms de variables, et  comment le code les utilise.
+* faites par étape ! on fait le dockerfile d'abord, on s'assure que ça build, puis on peut alors orchestrer l'ensemble avec le docker-compose file.
+* pour le dockerfile: regardez bien si le projet nécessite une librairie, du côté des **import** statements donc.
+* N'hésitez pas à runner plusieurs fois **docker-compose up --build** pour checker si le script Python arrive à communiquer avec le serveur Postgres, puis selon les messages d'erreurs ou les "success", allez de l'avant !
+* le code python doit attendre que le serveur Postgres soit prêt à accepter des connections entrantes avant de s'y connecter, sinon cela entraînera un message d'erreur. Par conséquent, vous devez en tenir compte en écrivant ces 3 lignes dans votre dockerfile:
+
+```
+	RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /
+	RUN chmod +x /wait-for-it.sh
+	ENTRYPOINT ["/wait-for-it.sh", "db:5432", "--"]
+```
+Pour les personnes curieuses, plus d'explications [ici](https://github.com/vishnubob/wait-for-it)
+
 
 <!-- 
 ### bind mounts exclusions
