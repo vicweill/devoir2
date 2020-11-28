@@ -6,6 +6,12 @@ RUN pip install psycopg2
 # copy contents of manager in app folder
 COPY . /app/
 
+
+RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /
+RUN chmod +x /wait-for-it.sh
+ENTRYPOINT ["/wait-for-it.sh", "db:5432", "--"]
+
 # run the package as a script
-# i.e. run the __main__.py
+# i.e. run the __main__.py AND evaluate __init__.py
+# https://stackoverflow.com/questions/7610001/what-is-the-purpose-of-the-m-switch
 CMD ["python", "-m", "app"]

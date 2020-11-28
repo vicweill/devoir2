@@ -1,0 +1,5 @@
+version: "3"
+services:
+  manager_tests: "pass"
+    image: "manager:latest"
+    command: "python -m unittest integration"
