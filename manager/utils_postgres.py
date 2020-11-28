@@ -2,7 +2,8 @@ from psycopg2 import connect
 from psycopg2.errors import DuplicateTable, DatabaseError
 import os
 
-def connect_to_db_server(user, password, database, host="db", port="5432"):
+def connect_to_db_server(user, password, 
+    database, host="db", port="5432"):
     """ Connect to database server with provided environment variables """
     try:
         connection = connect(
@@ -25,8 +26,6 @@ def create_new_table(connection):
                     id SERIAL, 
                     first_name VARCHAR(50),
                     last_name VARCHAR(50),
-                    date_of_birth DATE,
-                    email VARCHAR(100),
                     PRIMARY KEY (id)
                     ) """
     try:
@@ -45,7 +44,7 @@ def csv_to_table(connection, table, data_path):
     """ Load csv file (without header) to postgres table when formats match """
     try:
         cursor = connection.cursor()
-        with open(data_path) as f:
+        with open(data_path, 'r') as f:
             header = f.readline().rstrip("\n").split(',')
             cursor.copy_from(f, table, sep=",", 
                 columns=header)
@@ -62,7 +61,7 @@ def table_to_csv(connection, table, output_file):
     try:
         cursor = connection.cursor()
         cursor.execute(f"select * from {table} limit 0 ;")
-        colnames = [desc[0] for desc in cursor.description]
+        id_col, *colnames = [desc[0] for desc in cursor.description]
         cursor.execute(f"select * from {table} ;")
         records_without_id = []
         for id_, *rest in cursor.fetchall():
@@ -77,9 +76,6 @@ def table_to_csv(connection, table, output_file):
 def csv_to_tuples(file_path):
     """ Read csv file and return list of tuples """
     import csv
-    with open(file_path) as f:
+    with open(file_path, 'r') as f:
         data=[tuple(line) for line in csv.reader(f)]
     return data
-
-
-# what's the difference between a server side cursor and client side cursor (apprently you can't use a server side cursor to create a table): https://stackoverflow.com/questions/51804513/psycopg2-syntax-error-at-or-near-update

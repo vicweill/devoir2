@@ -1,6 +1,13 @@
-import unittest
-from manager import connect_to_db_server, csv_to_table, table_to_csv, csv_to_tuples
 import os
+import unittest
+from . import (
+	connect_to_db_server, 
+	csv_to_table, 
+	table_to_csv, 
+	csv_to_tuples)
+from . import package_dir
+
+
 
 class TestVarEnvPresents(unittest.TestCase):
 	def test_postgres_env_vars_set(self):
@@ -12,7 +19,9 @@ class TestVarEnvPresents(unittest.TestCase):
 	def test_CSV_and_OUPUT_FILE_set(self):
 		""" assert the CSV and OUTPUT_FILE are set """
 		self.assertIn("CSV_FILENAME", os.environ)
-		self.assertIn("OUTPUT_CSV_FILENAME", os.environ)
+
+	def tearDown(self):
+		super().tearDown()
 
 
 class TestConnectPostgres(unittest.TestCase):
@@ -30,11 +39,12 @@ class TestConnectPostgres(unittest.TestCase):
 		self.assertIsNotNone(self.connection)
 			
 	def tearDown(self):
+		super().tearDown()
 		""" This is called even if the test method raised an exception and if the setUp() succeeds """
 		if self.connection is not None:
 			self.connection.close()
 
-class TestPostgresOperations(TestConnectPostgres):
+class TestUploadCSV(TestConnectPostgres):
 
 	def setUp(self):
 		super().setUp()
@@ -42,26 +52,33 @@ class TestPostgresOperations(TestConnectPostgres):
 			self.pguser, self.pgpass, self.pgdb)
 		self.cursor = self.connection.cursor()
 		self.table_name = "persons"
-
+	
 	def test_table_exists(self):
 		""" Check for existence of the table, using EXISTS doesn't require that all rows be retrieved, but merely that at least one such row exists """
 		self.cursor.execute(f"select * from {self.table_name} limit 0;")
-		#colnames = [desc[0] for desc in self.cursor.description]
-		a = self.cursor.fetchone()
-		print( a )
-		self.assertTrue(a[0])
+		colnames = [desc[0] for desc in self.cursor.description]
+		#print( colnames )
+		# number of columns equals or is greater than 3
+		self.assertGreaterEqual(len(colnames), 3)
 
-	def test_csv_upload(self):
+	def test_csv_upload_and_download_have_worked(self):
 		# replace by hand crafted file
-		csv_filename = "./data/testing_data.csv"
-		csv_output_filename = "./data/fetched.csv"
+		path_input_file = os.path.join(package_dir, os.getenv("CSV_FILENAME"))
+		path_output_file = os.path.join(package_dir, "fetched_test.csv")
 
-		csv_to_table(self.connection, self.table_name, csv_filename)
-		table_to_csv(self.connection, self.table_name, csv_output_filename)
+		table_to_csv(self.connection, self.table_name, path_output_file)
+
 		self.assertEqual(
-			csv_to_tuples(csv_filename),
-			csv_to_tuples(csv_output_filename))
+			csv_to_tuples(path_input_file),
+			csv_to_tuples(path_output_file))
 
 	def tearDown(self):
 		super().tearDown()
 
+
+
+if __name__ == "__main__":
+	test_suite = unittest.TestLoader().loadTestsFromModule("tests_integration")
+	test_result = unittest.TextTestRunner().run(test_suite)
+	print(len(test_result.failures))
+	print(len(test_result.errors))
