@@ -11,14 +11,26 @@ The app isn't containerized yet, we want you to **create a Dockerfile** to **bun
 
 1. You **must** have a GitHub account.
 2. Fork this repository.
-3. Git clone the forked repository into a local repository
+3. Git clone the forked repository into a local repository (`git clone url_of_your_forked_repo`)
 3. Create a Dockerfile + docker-compose.yml file
 4. Check if your containerized app works\*
-5. Git push
+5. Git push\*
 6. Post the link on DVO
 
 \* here is the expected output i should obtain by doing `docker-compose up --build` (you should see one or more "success" lines as you make progress in the project)
 <img align="center" src="output.png">
+
+\* How to push code,
+- first, git clone: 
+```sh
+	git clone lien_url_https_de_votre_repo
+```
+- do your modifications, and then at the end of the 3h session, at your root folder, do:
+```sh
+	git add .
+	git commit -m "first commit"
+	git push origin master
+```
 
 # In English (French below)
 
