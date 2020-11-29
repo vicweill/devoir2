@@ -76,9 +76,18 @@ class TestUploadCSV(TestConnectPostgres):
 		super().tearDown()
 
 
-
-if __name__ == "__main__":
-	test_suite = unittest.TestLoader().loadTestsFromModule("tests_integration")
-	test_result = unittest.TextTestRunner().run(test_suite)
+def launch_tests():
+	suite = unittest.TestSuite()
+	suite.addTest(TestVarEnvPresents(
+		'test_postgres_env_vars_set'))
+	suite.addTest(TestVarEnvPresents(
+		'test_CSV_and_OUPUT_FILE_set'))
+	suite.addTest(TestConnectPostgres(
+		'test_connection_to_db_server'))
+	suite.addTest(TestUploadCSV(
+		'test_table_exists'))
+	suite.addTest(TestUploadCSV(
+		'test_csv_upload_and_download_have_worked'))
+	test_result = unittest.TextTestRunner().run(suite)
 	print(len(test_result.failures))
 	print(len(test_result.errors))

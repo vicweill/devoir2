@@ -6,3 +6,5 @@ from .utils_postgres import (create_new_table,
 							 table_to_csv)
 
 from .config import *
+
+from .tests_integration import launch_tests
