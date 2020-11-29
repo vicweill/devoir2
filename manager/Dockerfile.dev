@@ -7,10 +7,9 @@ RUN pip install psycopg2
 
 COPY . ohoh/
 
-RUN mkdir scripts/
-RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /scripts/
-RUN chmod +x /scripts/wait-for-it.sh
-ENTRYPOINT ["/scripts/wait-for-it.sh", "db:5432", "--"]
+RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /
+RUN chmod +x /wait-for-it.sh
+ENTRYPOINT ["/wait-for-it.sh", "db:5432", "--"]
 
 # run the package as a script
 # i.e. run the __main__.py AND evaluate __init__.py

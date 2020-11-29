@@ -4,9 +4,9 @@ from . import (
 	connect_to_db_server, 
 	csv_to_table, 
 	table_to_csv, 
-	csv_to_tuples)
+	csv_to_tuples,
+	ping)
 from . import package_dir
-
 
 
 class TestVarEnvPresents(unittest.TestCase):
@@ -22,6 +22,10 @@ class TestVarEnvPresents(unittest.TestCase):
 
 	def tearDown(self):
 		super().tearDown()
+
+class TestServiceReachable(unittest.TestCase):
+	def test_is_postgres_service_reachable(self):
+		self.assertTrue(ping("db"))
 
 
 class TestConnectPostgres(unittest.TestCase):
@@ -82,6 +86,9 @@ def launch_tests():
 		'test_postgres_env_vars_set'))
 	suite.addTest(TestVarEnvPresents(
 		'test_CSV_and_OUPUT_FILE_set'))
+	suite.addTest(TestServiceReachable(
+		'test_is_postgres_service_reachable'
+		))
 	suite.addTest(TestConnectPostgres(
 		'test_connection_to_db_server'))
 	suite.addTest(TestUploadCSV(

@@ -4,7 +4,7 @@ services:
     build: 
       context: "./manager"
       dockerfile: "Dockerfile.dev"
-    image: "manager:latest"
+    #image: "manager:latest"
     #stdin_open: true
     #tty: true
     #volumes:

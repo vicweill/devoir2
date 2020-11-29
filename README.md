@@ -3,9 +3,9 @@
 
 # Brief description
 
-The python code you see within the manager folder has been designed to connect to a Postgres server, attempt to load a CSV data into a table named 'persons' within a database named 'world'.
+The python code you see within the manager folder has been designed to connect to a Postgres server, attempt to load a CSV data into a table named *persons* within a given database.
 
-The app isn't containerized yet, we want you to create a Dockerfile to bundle your app along with its dependencies and a docker-compose file to orchestrate this app along with a postgres server using the official Postgres docker image.
+The app isn't containerized yet, we want you to **create a Dockerfile** to **bundle your app along with its dependencies** and a **docker-compose file to orchestrate this app along with a postgres server** using the **official Postgres docker image**.
 
 ## In English (French below)
 
