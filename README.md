@@ -15,7 +15,7 @@ The app isn't containerized yet, we want you to **create a Dockerfile** to **bun
 3. Create a **Dockerfile + docker-compose.yml** file
 4. Check if your containerized app works\*
 5. Git push\*
-6. Post the link on DVO
+6. Post your name, lastname (as appears on the DVO/attendance list) and Github link here: https://forms.gle/qhdQQ2mcgPenCgdb7
 
 \* here is the expected output i should obtain by doing `docker-compose up --build` (you should see one or more "success" lines as you make progress in the project)
 <img align="center" src="output.png">
