@@ -7,9 +7,22 @@ The python code you see within the manager folder has been designed to connect t
 
 The app isn't containerized yet, we want you to **create a Dockerfile** to **bundle your app along with its dependencies** and a **docker-compose file to orchestrate this app along with a postgres server** using the **official Postgres docker image**.
 
-## In English (French below)
+# Prerequities
 
-### Must Do !
+1. You **must** have a GitHub account.
+2. Fork this repository.
+3. Git clone the forked repository into a local repository
+3. Create a Dockerfile + docker-compose.yml file
+4. Check if your containerized app works\*
+5. Git push
+6. Post the link on DVO
+
+\* here is the expected output (you should see one or more "success" lines such as that)
+<img align="center" src="output.png">
+
+# In English (French below)
+
+## Must Do !
 - You can define your dockerfile wherever you want but you **MUST** copy **all the contents** of the directory **manager** in a **dedicated folder** (feel free for the name) within the **root of the container**
 - You **MUST** define the **docker-compose.yml** file where it is usually defined, that is, the **project root**.
 - The Python code **MUST NOT** be modified, **NOR** moved under **NO** circumstances, **only 1 Dockerfile and 1 docker-compose file should be created**
