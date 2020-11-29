@@ -1,6 +1,8 @@
-from psycopg2 import connect
-from psycopg2.errors import DuplicateTable, DatabaseError
-import os
+try: 
+    from psycopg2 import connect
+    from psycopg2.errors import DuplicateTable, DatabaseError
+except:
+    pass
 
 def connect_to_db_server(user, password, 
     database, host="db", port="5432"):

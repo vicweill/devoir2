@@ -1,5 +1,6 @@
 from . import *
-if not os.getenv("TESTING"):
+
+if not testing:	
 	try:
 		con = None
 		# open connection to db

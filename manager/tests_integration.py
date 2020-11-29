@@ -8,7 +8,6 @@ from . import (
 	ping)
 from . import package_dir
 
-
 class TestVarEnvPresents(unittest.TestCase):
 	def test_postgres_env_vars_set(self):
 		""" assert whether env variables are defined """
@@ -16,17 +15,23 @@ class TestVarEnvPresents(unittest.TestCase):
 		self.assertIn("POSTGRES_USER", os.environ)
 		self.assertIn("POSTGRES_DB", os.environ)
 
-	def test_CSV_and_OUPUT_FILE_set(self):
-		""" assert the CSV and OUTPUT_FILE are set """
+	def test_CSV_filename_is_set(self):
+		""" assert the CSV filename var env is set """
 		self.assertIn("CSV_FILENAME", os.environ)
 
 	def tearDown(self):
 		super().tearDown()
 
-class TestServiceReachable(unittest.TestCase):
+class TestCoreServices(unittest.TestCase):
 	def test_is_postgres_service_reachable(self):
 		self.assertTrue(ping("db"))
-
+	def test_are_dependencies_installed_for_app(self):
+		try:
+			import psycopg2
+			boolean = True
+		except:
+			boolean = False
+		self.assertTrue(boolean)
 
 class TestConnectPostgres(unittest.TestCase):
 
@@ -85,9 +90,12 @@ def launch_tests():
 	suite.addTest(TestVarEnvPresents(
 		'test_postgres_env_vars_set'))
 	suite.addTest(TestVarEnvPresents(
-		'test_CSV_and_OUPUT_FILE_set'))
-	suite.addTest(TestServiceReachable(
+		'test_CSV_filename_is_set'))
+	suite.addTest(TestCoreServices(
 		'test_is_postgres_service_reachable'
+		))
+	suite.addTest(TestCoreServices(
+		'test_are_dependencies_installed_for_app'
 		))
 	suite.addTest(TestConnectPostgres(
 		'test_connection_to_db_server'))
