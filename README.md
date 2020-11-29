@@ -17,7 +17,7 @@ The app isn't containerized yet, we want you to **create a Dockerfile** to **bun
 5. Git push
 6. Post the link on DVO
 
-\* here is the expected output (you should see one or more "success" lines such as that)
+\* here is the expected output i should obtain by doing `docker-compose up --build` (you should see one or more "success" lines as you make progress in the project)
 <img align="center" src="output.png">
 
 # In English (French below)
@@ -26,6 +26,7 @@ The app isn't containerized yet, we want you to **create a Dockerfile** to **bun
 - You can define your dockerfile wherever you want but you **MUST** copy **all the contents** of the directory **manager** in a **dedicated folder** (feel free for the name) within the **root of the container**
 - You **MUST** define the **docker-compose.yml** file where it is usually defined, that is, the **project root**.
 - The Python code **MUST NOT** be modified, **NOR** moved under **NO** circumstances, **only 1 Dockerfile and 1 docker-compose file should be created**
+- I should obtain a result by **ONLY** doing **docker-compose up --build**.
 <!-- - You will need, using the docker-compose file, to **tag** the image built from the dockerfile with the exact name: **manager:latest**. -->
 - The **service** in the **docker-compose** file, for the application **MUST** be named **manager** 
 
